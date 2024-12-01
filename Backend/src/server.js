@@ -11,7 +11,7 @@ const app = express();
 
 // CORS options
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000', // Update as needed
+  origin: process.env.FRONTEND_URL || 'https://vk-tasty.vercel.app/', // Update as needed
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
 };
@@ -40,7 +40,6 @@ export const startServer = async () => {
         .map((iface) => iface.address)
         .find(Boolean);
 
-      console.log(`Server is running on http://localhost:${port}`);
       if (ipAddress) {
         console.log(`Locally connected to: http://${ipAddress}:${port}`);
       } else {
