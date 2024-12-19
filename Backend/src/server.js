@@ -11,10 +11,11 @@ const app = express();
 
 // CORS options
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'https://vk-tasty.vercel.app/', // Update as needed
-  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  origin: process.env.FRONTEND_URL || "http://localhost:3000", // Remove trailing slash
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
+
 
 // Middleware
 app.use(cookieParser());
