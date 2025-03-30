@@ -10,10 +10,12 @@ const Login = () => {
         password: ""
     });
 
+    // Handle input change
     const handleChange = (e) => {
         setData({ ...data, [e.target.name]: e.target.value });
     };
 
+    // Handle form submission
     const handleLogin = (e) => {
         e.preventDefault();
         fetch(`${process.env.REACT_APP_API_URL}/login`, {
@@ -23,21 +25,26 @@ const Login = () => {
             },
             body: JSON.stringify(data),
         })
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.token) {
-                alert(data.message);
-                sessionStorage.setItem("token", data.token);
-                sessionStorage.setItem("first_name", data.user.first_name);
-                sessionStorage.setItem("last_name", data.user.last_name);
-                dispatch({ type: "ISLOGGEDIN", payload: data.user });
-                navigate('/dashboard');
+                alert(data.message); // Login successful
+                sessionStorage.setItem("token", data.token); // Store token in sessionStorage
+                sessionStorage.setItem("first_name", data.user.first_name); // Store user's first name
+                sessionStorage.setItem("last_name", data.user.last_name); // Store user's last name
+                dispatch({ type: "ISLOGGEDIN", payload: data.user }); // Update Redux state
+                navigate('/dashboard'); // Redirect to dashboard
             } else {
-                alert(data.message);
+                alert(data.message); // Show error message
             }
         })
         .catch(error => {
-            alert(error.message);
+            alert(error.message); // Handle network or server errors
         });
     };
 
@@ -68,6 +75,7 @@ const Login = () => {
                                                         className="form-control rounded-pill"
                                                         placeholder="E-mail"
                                                         name='email'
+                                                        value={data.email}
                                                         onChange={handleChange}
                                                         required
                                                     />
@@ -78,12 +86,13 @@ const Login = () => {
                                                         className="form-control rounded-pill"
                                                         placeholder="Password"
                                                         name='password'
+                                                        value={data.password}
                                                         onChange={handleChange}
                                                         required
                                                     />
                                                 </div>
                                                 <div className='submit_btn'>
-                                                    <button className='btn btn-outline-light rounded-pill px-5 py-2 mt-3'>Login</button>
+                                                    <button type="submit" className='btn btn-outline-light rounded-pill px-5 py-2 mt-3'>Login</button>
                                                 </div>
                                                 <p className='text-light mt-3'>Don't have an account? <a href='/sign-up' className='text-light fw-bold'>Click here</a> to Signup</p>
                                                 <p className='text-light mt-3'>Visit Our pages</p>

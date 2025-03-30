@@ -6,32 +6,26 @@ import "dotenv/config";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 
-// Initialize the Express app
 const app = express();
-
-// CORS options
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || "http://localhost:3000", // Remove trailing slash
+  origin: process.env.FRONTEND_URL || "http://localhost:3000", 
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
 
 
-// Middleware
 app.use(cookieParser());
 app.use(cors(corsOptions));
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ limit: "10mb", extended: true }));
 
-// Set strictQuery option
 mongoose.set("strictQuery", false);
 
-// Routes
 app.use("/", routes);
 
 export const startServer = async () => {
   try {
-    const port = process.env.PORT || 5000; // Default port
+    const port = process.env.PORT || 5000; 
     app.listen(port, () => {
       const networkInterfaces = os.networkInterfaces();
       const ipAddress = Object.values(networkInterfaces)
