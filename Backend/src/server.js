@@ -5,14 +5,17 @@ import os from "os";
 import "dotenv/config";
 import cors from "cors";
 import cookieParser from "cookie-parser";
+import path from "path";
 
 const app = express();
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || "http://localhost:3000", 
+  origin: [
+    process.env.FRONTEND_URL || "http://localhost:3000",
+    "https://vk-tasty.vercel.app",
+  ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
-
 
 app.use(cookieParser());
 app.use(cors(corsOptions));
@@ -23,9 +26,17 @@ mongoose.set("strictQuery", false);
 
 app.use("/", routes);
 
+// Serve frontend
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, "frontend/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.resolve(__dirname, "frontend", "build", "index.html"));
+});
+
 export const startServer = async () => {
   try {
-    const port = process.env.PORT || 5000; 
+    const port = process.env.PORT || 5000;
     app.listen(port, () => {
       const networkInterfaces = os.networkInterfaces();
       const ipAddress = Object.values(networkInterfaces)
